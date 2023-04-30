@@ -49,40 +49,40 @@
         <div class="card mt-1">
             <div class="card-header"><h5>Lesson {{lesson.order|add:1}}: {{lesson.title}}</h5></div>
             <div class="card-body">{{lesson.content}}</div>
-            <div class="card-footer">
-                <button data-toggle="collapse" data-target="#exam{{lesson.order|add:1}}" class="btn btn-primary w-100">
-                    Show Exam
-                </button>
-            </div>
-        </div>
-        <div id="exam{{lesson.order|add:1}}" class="collapse">
-            {% if user.is_authenticated %}
-            <form id="questionform" action="point to a submit view" method="post">
-                {% for question in lesson.question_set.all %}
-                <div class="card mt-1">
-                    <div class="card-header"><h5>{{ question.question}}</h5></div>
-                    {% csrf_token %}
-                    <div class="form-group">
-                        {% for choice in question.choice_set.all %}
-                        <div class="form-check">
-                            <label class="form-check-label ml-2 mt-2">
-                                <input type="checkbox" name="choice_{{choice.id}}"
-                                       class="form-check-input" id="{{choice.id}}"
-                                       value="{{choice.id}}">{{ choice.text }}
-                            </label>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-                {% endfor %}
-                <input class="btn btn-success w-100 mt-2 mb-2" type="submit" value="Submit">
-            </form>
-            {% else %}
-            <p class="mt-2 text-danger">You must be logged in to start the exam.</p>
-            {% endif %}
         </div>
         {% endfor %}
     </div>
+    <button data-toggle="collapse" data-target="#exam" class="btn btn-primary w-100 mt-2 mb-2">
+        Show Exam
+    </button>
+    <div id="exam" class="collapse">
+        <h5>Course Exam</h5>
+        {% if user.is_authenticated %}
+        <form id="questionform" action="submit" method="post">
+            {% for question in course.question_set.all %}
+            <div class="card mt-1">
+                <div class="card-header"><h5>{{ question.question}}</h5></div>
+                {% csrf_token %}
+                <div class="form-group">
+                    {% for choice in question.choice_set.all %}
+                    <div class="form-check">
+                        <label class="form-check-label ml-2 mt-2">
+                            <input type="checkbox" name="choice_{{choice.id}}"
+                                   class="form-check-input" id="{{choice.id}}"
+                                   value="{{choice.id}}">{{ choice.text }}
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+            <input class="btn btn-success w-100 mt-2 mb-2" type="submit" value="Submit">
+        </form>
+        {% else %}
+        <p class="mt-2 text-danger">You must be logged in to start the exam.</p>
+        {% endif %}
+    </div>
+
     <!-- Task: show questions and choices -->
     <!-- <HINT> Use Bootstrap Collapse to hide exam first, more details could be found here
     https://www.w3schools.com/bootstrap4/bootstrap_collapse.asp-->
