@@ -166,5 +166,10 @@ def show_exam_result(request, course_id, submission_id):
     selected_ids = []
     for choice in submission.choices.all():
         selected_ids.append(choice.id)
-
-
+    questions = course.question_set.all()
+    total_questions = questions.count()
+    total_correct_questions = 0
+    for question in questions:
+        if question.is_get_score(selected_ids=selected_ids):
+            total_correct_questions += 1
+    grade = (total_correct_questions / total_questions) * 100
